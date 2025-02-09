@@ -20,7 +20,8 @@ import (
 )
 
 const (
-	host = "localhost"
+	// TODO: make configurable, default should be "localhost"
+	host = "0.0.0.0"
 	port = "23235"
 )
 
