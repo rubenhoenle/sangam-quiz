@@ -28,8 +28,19 @@
         sangam-quiz = pkgs.buildGoModule {
           name = "sangam-quiz";
           version = "0.0.1";
-          vendorHash = "sha256-yRxXCdtBqSHTpgWpMeXLDJpY1802a7pcYb3g6AM/8PU=";
+          #vendorHash = pkgs.lib.fakeHash;
+          vendorHash = "sha256-l5i1C7SFbAQhtOrVRXuvY7S7T/oKlxejrVgBj1hP+Pw=";
           src = ./.;
+          subPackages = "cmd/sangam-quiz";
+        };
+
+        sangam-quiz-ssh = pkgs.buildGoModule {
+          name = "sangam-quiz-ssh";
+          version = "0.0.1";
+          #vendorHash = pkgs.lib.fakeHash;
+          vendorHash = "sha256-l5i1C7SFbAQhtOrVRXuvY7S7T/oKlxejrVgBj1hP+Pw=";
+          src = ./.;
+          subPackages = "cmd/sangam-quiz-ssh";
         };
       in
       {
@@ -44,6 +55,7 @@
 
         packages = flake-utils.lib.flattenTree {
           default = sangam-quiz;
+          ssh = sangam-quiz-ssh;
         };
       }
     );
