@@ -16,18 +16,15 @@ import (
 	"github.com/charmbracelet/wish/activeterm"
 	"github.com/charmbracelet/wish/bubbletea"
 	"github.com/charmbracelet/wish/logging"
+	"github.com/rubenhoenle/sangam-quiz/config"
 	"github.com/rubenhoenle/sangam-quiz/quiz"
 )
 
-const (
-	// TODO: make configurable, default should be "localhost"
-	host = "0.0.0.0"
-	port = "23235"
-)
-
 func main() {
+	sshConfig := config.GetSshConfig()
+
 	s, err := wish.NewServer(
-		wish.WithAddress(net.JoinHostPort(host, port)),
+		wish.WithAddress(net.JoinHostPort(sshConfig.Host, sshConfig.Port)),
 		wish.WithHostKeyPath(".ssh/id_ed25519"),
 		wish.WithMiddleware(
 			bubbletea.Middleware(teaHandler),
@@ -41,7 +38,7 @@ func main() {
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-	log.Info("Starting SSH server", "host", host, "port", port)
+	log.Info("Starting SSH server", "host", sshConfig.Host, "port", sshConfig.Port)
 	go func() {
 		if err = s.ListenAndServe(); err != nil && !errors.Is(err, ssh.ErrServerClosed) {
 			log.Error("Could not start server", "error", err)
