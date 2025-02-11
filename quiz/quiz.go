@@ -2,8 +2,6 @@ package quiz
 
 import (
 	"fmt"
-	"math/rand"
-	"os"
 
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
@@ -12,6 +10,7 @@ import (
 	daomodel "github.com/rubenhoenle/sangam-quiz/model"
 	jsonprovider "github.com/rubenhoenle/sangam-quiz/provider/json-provider"
 	"github.com/rubenhoenle/sangam-quiz/service"
+	"github.com/rubenhoenle/sangam-quiz/util"
 )
 
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
@@ -72,25 +71,10 @@ func InitializeModel() model {
 		items = append(items, si)
 	}
 
-	quizItem := getRandomSangamItem(sangamItems)
+	quizItem := util.GetRandomSangamItem(sangamItems)
 
 	m := model{list: list.New(items, list.NewDefaultDelegate(), 0, 0), searchedItem: quizItem}
 	m.list.Title = fmt.Sprintf("Sangam Quiz - Please select the menu with this id: %s", quizItem.Id)
 
 	return m
-}
-
-func Run() {
-	m := InitializeModel()
-	p := tea.NewProgram(m, tea.WithAltScreen())
-
-	if _, err := p.Run(); err != nil {
-		fmt.Println("Error running program:", err)
-		os.Exit(1)
-	}
-}
-
-func getRandomSangamItem(items []daomodel.SangamItem) daomodel.SangamItem {
-	randomIndex := rand.Intn(len(items))
-	return items[randomIndex]
 }
